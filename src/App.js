@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -142,36 +145,6 @@ const App = () => {
     setNewUrl(event.target.value)
   }
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        <label htmlFor="title">title:</label>
-        <input
-          id="title"
-          value={newTitle}
-          onChange={handleTitleChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="author">author:</label>
-        <input
-          id="author"
-          value={newAuthor}
-          onChange={handleAuthorChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="url">url:</label>
-        <input
-          id="url"
-          value={newUrl}
-          onChange={handleUrlChange}
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>  
-  )
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -223,8 +196,17 @@ const App = () => {
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <h2>create new</h2>
-      {blogForm()}
+      <Togglable buttonLabel='New Blog'>
+        <BlogForm
+          onSubmit={addBlog}
+          newTitle={newTitle}
+          handleTitleChange={handleTitleChange}
+          newAuthor={newAuthor}
+          handleAuthorChange={handleAuthorChange}
+          newUrl={newUrl}
+          handleUrlChange={handleUrlChange}
+        />
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
