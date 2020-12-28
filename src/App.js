@@ -15,6 +15,13 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const sortAndSetBlogs = (blogsToSort) => {
+    blogsToSort.sort((blog1, blog2) => {
+      return blog2.likes - blog1.likes
+    })
+    setBlogs(blogsToSort)
+  }
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
@@ -99,7 +106,7 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        sortAndSetBlogs(blogs.concat(returnedBlog))
         setMessage(
           {
             content: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -128,13 +135,13 @@ const App = () => {
     blogService
       .update(blogObject, id)
       .then(returnedBlog => {
-        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+        sortAndSetBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
       })
   }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      sortAndSetBlogs( blogs )
     )  
   }, [])
 
