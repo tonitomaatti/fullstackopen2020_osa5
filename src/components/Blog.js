@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
+
   const [fullView, setFullView] = useState(false)
 
   const toggleFullView = () => {
@@ -11,12 +19,17 @@ const Blog = ({ blog }) => {
 
   const label = fullView ? 'hide' : 'view'
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+  const like = () => {
+    likeBlog(
+      {
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        user: blog.user,
+        likes: blog.likes + 1
+      },
+      blog.id
+    )
   }
   
   return (
@@ -28,7 +41,7 @@ const Blog = ({ blog }) => {
       <div style={visibility}>{blog.url}</div>
       <div style={visibility}>
         {blog.likes}
-        <button>like</button>
+        <button onClick={like}>like</button>
       </div>
       <div style={visibility}>{blog.author}</div>
     </div>

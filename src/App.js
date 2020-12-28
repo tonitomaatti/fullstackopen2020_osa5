@@ -123,6 +123,15 @@ const App = () => {
       })
   }
 
+  const likeBlog = (blogObject, id) => {
+
+    blogService
+      .update(blogObject, id)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -178,7 +187,7 @@ const App = () => {
         <BlogForm createBlog={createBlog}/>
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
       )}
     </div>
   )
