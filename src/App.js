@@ -13,6 +13,8 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState([])
   const [newUrl, setNewUrl] = useState([])
 
+  const [message, setMessage] = useState(null)
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
@@ -88,6 +90,26 @@ const App = () => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
+        setMessage(
+          {
+            content: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+            type: 'success'
+          }
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setMessage(
+          {
+            content: 'blog creation failed',
+            type: 'error'
+          }
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
   }
 
@@ -139,6 +161,33 @@ const App = () => {
     )  
   }, [])
 
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+
+    const notificationStyle = {
+      background: 'lightgrey',
+      fontSize: '20px',
+      borderStyle: 'solid',
+      borderRadius: '5px',
+      padding: '10px',
+      marginBottom: '10px'
+    }
+
+    if (message.type === 'success') {
+      notificationStyle.color = 'green'
+    } else if (message.type === 'error') {
+      notificationStyle.color = 'red'
+    }
+
+    return (
+      <div style={notificationStyle}>
+        {message.content}
+      </div>
+    )
+  }
+
   if (user === null) {
     return (
       <div>
@@ -151,6 +200,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} />
       <p>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
