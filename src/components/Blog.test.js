@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import Blog from './Blog'
 
 
@@ -13,7 +13,7 @@ describe('<Blog />' , () => {
       title: 'A test blog title',
       author: 'Test Author',
       url: 'https://www.google.com',
-      likes: 2,
+      likes: 251,
       user: { name:'test name', username: 'test_username', token:'test_token' }
     }
 
@@ -40,6 +40,18 @@ describe('<Blog />' , () => {
 
     const divDetails = component.container.querySelector('.blogDetails')
     expect(divDetails).toHaveStyle('display: none')
+  })
+
+  test('renders detailed info when clicked', () => {
+    const button = component.getByText('view')
+    fireEvent.click(button)
+
+    const divDetails = component.container.querySelector('.blogDetails')
+    expect(divDetails).not.toHaveStyle('display: none')
+
+    expect(component.container).toHaveTextContent('Test Author')
+    expect(component.container).toHaveTextContent('https://www.google.com')
+    expect(component.container).toHaveTextContent('251')
   })
 
 })
