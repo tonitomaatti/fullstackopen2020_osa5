@@ -11,11 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [newTitle, setNewTitle] = useState([])
-  const [newAuthor, setNewAuthor] = useState([])
-  const [newUrl, setNewUrl] = useState([])
-
   const [message, setMessage] = useState(null)
 
   const blogFormRef = useRef()
@@ -97,13 +92,7 @@ const App = () => {
     </form>      
   )
 
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
+  const createBlog = (blogObject) => {
 
     blogFormRef.current.toggleVisibility()
   
@@ -111,9 +100,6 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
         setMessage(
           {
             content: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
@@ -135,18 +121,6 @@ const App = () => {
           setMessage(null)
         }, 5000)
       })
-  }
-
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
   }
 
   useEffect(() => {
@@ -201,15 +175,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
       <Togglable buttonLabel='New Blog' ref={blogFormRef}>
-        <BlogForm
-          onSubmit={addBlog}
-          newTitle={newTitle}
-          handleTitleChange={handleTitleChange}
-          newAuthor={newAuthor}
-          handleAuthorChange={handleAuthorChange}
-          newUrl={newUrl}
-          handleUrlChange={handleUrlChange}
-        />
+        <BlogForm createBlog={createBlog}/>
       </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
