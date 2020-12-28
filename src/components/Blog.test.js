@@ -6,6 +6,7 @@ import Blog from './Blog'
 
 describe('<Blog />' , () => {
   let component
+  let mockLikeBlog
 
   beforeEach(() => {
     const blog = {
@@ -17,7 +18,7 @@ describe('<Blog />' , () => {
       user: { name:'test name', username: 'test_username', token:'test_token' }
     }
 
-    const mockLikeBlog = jest.fn()
+    mockLikeBlog = jest.fn()
     const mockRemoveBlog = jest.fn()
 
     component = render(
@@ -32,7 +33,6 @@ describe('<Blog />' , () => {
   })
 
   test('renders only blog title by default', () => {
-
     const divTitle = component.container.querySelector('.blogTitle')
     expect(divTitle).toHaveTextContent(
       'A test blog title'
@@ -43,8 +43,8 @@ describe('<Blog />' , () => {
   })
 
   test('renders detailed info when clicked', () => {
-    const button = component.getByText('view')
-    fireEvent.click(button)
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
 
     const divDetails = component.container.querySelector('.blogDetails')
     expect(divDetails).not.toHaveStyle('display: none')
@@ -52,6 +52,14 @@ describe('<Blog />' , () => {
     expect(component.container).toHaveTextContent('Test Author')
     expect(component.container).toHaveTextContent('https://www.google.com')
     expect(component.container).toHaveTextContent('251')
+  })
+
+  test('clicking like twice calls the event handler twice', async () => {
+    const likeButton = component.getByText('like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(mockLikeBlog.mock.calls).toHaveLength(2)
   })
 
 })
