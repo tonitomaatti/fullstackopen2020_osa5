@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
@@ -17,6 +17,8 @@ const App = () => {
   const [newUrl, setNewUrl] = useState([])
 
   const [message, setMessage] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -102,6 +104,8 @@ const App = () => {
       author: newAuthor,
       url: newUrl
     }
+
+    blogFormRef.current.toggleVisibility()
   
     blogService
       .create(blogObject)
@@ -196,7 +200,7 @@ const App = () => {
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <Togglable buttonLabel='New Blog'>
+      <Togglable buttonLabel='New Blog' ref={blogFormRef}>
         <BlogForm
           onSubmit={addBlog}
           newTitle={newTitle}
