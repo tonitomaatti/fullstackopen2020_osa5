@@ -40,7 +40,7 @@ const Blog = ({ blog, likeBlog, currentUser, removeBlog }) => {
       removeBlog(blog.id)
     }
   }
-  
+
   return (
     <div style={blogStyle}>
       <div>

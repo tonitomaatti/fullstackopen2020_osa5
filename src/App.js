@@ -8,7 +8,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
@@ -80,7 +80,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -89,7 +89,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -97,13 +97,13 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const createBlog = (blogObject) => {
 
     blogFormRef.current.toggleVisibility()
-  
+
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -118,7 +118,7 @@ const App = () => {
           setMessage(null)
         }, 5000)
       })
-      .catch(error => {
+      .catch( () => {
         setMessage(
           {
             content: 'blog creation failed',
@@ -144,7 +144,7 @@ const App = () => {
 
     blogService
       .remove(id)
-      .then(response => {
+      .then( () => {
         sortAndSetBlogs(blogs.filter(blog => blog.id !== id))
       })
   }
@@ -152,7 +152,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       sortAndSetBlogs( blogs )
-    )  
+    )
   }, [])
 
   const Notification = ({ message }) => {
@@ -204,7 +204,7 @@ const App = () => {
         <BlogForm createBlog={createBlog}/>
       </Togglable>
       {blogs.map(blog =>
-        <Blog 
+        <Blog
           key={blog.id}
           blog={blog}
           likeBlog={likeBlog}
