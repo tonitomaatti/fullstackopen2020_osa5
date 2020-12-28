@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, currentUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -18,6 +18,8 @@ const Blog = ({ blog, likeBlog }) => {
   const visibility = { display: fullView ? '' : 'none' }
 
   const label = fullView ? 'hide' : 'view'
+
+  const showRemove = { display: currentUser === blog.user.username ? '' : 'none' }
 
   const like = () => {
     likeBlog(
@@ -38,12 +40,15 @@ const Blog = ({ blog, likeBlog }) => {
         {blog.title}
         <button onClick={toggleFullView}>{label}</button>
       </div>
-      <div style={visibility}>{blog.url}</div>
       <div style={visibility}>
-        {blog.likes}
-        <button onClick={like}>like</button>
+        <div>{blog.url}</div>
+        <div>
+          {blog.likes}
+          <button onClick={like}>like</button>
+        </div>
+        <div>{blog.author}</div>
+        <div style={showRemove}><button>remove</button></div>
       </div>
-      <div style={visibility}>{blog.author}</div>
     </div>
   )
 }
