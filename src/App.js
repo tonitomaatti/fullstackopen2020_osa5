@@ -140,6 +140,15 @@ const App = () => {
       })
   }
 
+  const removeBlog = (id) => {
+
+    blogService
+      .remove(id)
+      .then(response => {
+        sortAndSetBlogs(blogs.filter(blog => blog.id !== id))
+      })
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       sortAndSetBlogs( blogs )
@@ -195,7 +204,13 @@ const App = () => {
         <BlogForm createBlog={createBlog}/>
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} currentUser={user.username} />
+        <Blog 
+          key={blog.id}
+          blog={blog}
+          likeBlog={likeBlog}
+          currentUser={user.username}
+          removeBlog={removeBlog}
+        />
       )}
     </div>
   )
