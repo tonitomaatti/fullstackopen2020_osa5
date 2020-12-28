@@ -40,9 +40,26 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage(
+        {
+          content: 'Login succesful',
+          type: 'success'
+        }
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
 
-    } catch (exception) {
-      console.log('error')
+    } catch (error) {
+      setMessage(
+        {
+          content: 'wrong username or password',
+          type: 'error'
+        }
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -192,6 +209,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message} />
         {loginForm()}
       </div>
     )
