@@ -60,4 +60,33 @@ describe('Blog app', function() {
         .and('not.contain', 'Login succesful')
     })
   })
+
+  describe.only('When logged in', function() {
+    beforeEach(function() {
+      cy.request('POST', 'http://localhost:3001/api/login', {
+        username: 'c_tester', password: 'secretPassword'
+      }).then(response => {
+        localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
+        cy.visit('http://localhost:3000')
+      })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('New Blog').click()
+      cy.get('#title').type('cypress blog')
+      cy.get('#author').type('cypress author')
+      cy.get('#url').type('https://www.urlbycypress.com')
+      cy.get('#create-blog-button').click()
+
+      cy.contains('cypress blog')
+        .should('have.css', 'border-style', 'solid')
+        .parent()
+        .should('contain', 'view')
+
+      cy.get('#notification')
+        .should('contain', 'a new blog cypress blog by cypress author added')
+        .and('have.css', 'color', 'rgb(0, 128, 0)')
+        .and('not.contain', 'blog creation failed')
+    })
+  })
 })
