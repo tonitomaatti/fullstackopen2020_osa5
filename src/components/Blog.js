@@ -45,13 +45,13 @@ const Blog = ({ blog, likeBlog, currentUser, removeBlog }) => {
     <div style={blogStyle}>
       <div className="blogTitle">
         {blog.title}
-        <button onClick={toggleFullView}>{label}</button>
+        <button className="toggle-view-button" onClick={toggleFullView}>{label}</button>
       </div>
       <div style={visibility} className="blogDetails">
         <div>{blog.url}</div>
         <div>
           {blog.likes}
-          <button onClick={like}>like</button>
+          <button className="like-button" onClick={like}>like</button>
         </div>
         <div>{blog.author}</div>
         <div style={showRemove}>

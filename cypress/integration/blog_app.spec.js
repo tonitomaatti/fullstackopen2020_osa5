@@ -135,6 +135,33 @@ describe('Blog app', function() {
           .parent()
           .should('not.be.visible')
       })
+
+      it.only('blogs are ordered by likes descending', function () {
+        cy.get('.toggle-view-button').each($btn => {
+          cy.wrap($btn).click()
+        })
+
+        cy.get('.blogTitle').then($div => {
+          cy.wrap($div[0]).should('contain', 'blog one')
+          cy.wrap($div[1]).should('contain', 'blog two')
+          cy.wrap($div[2]).should('contain', 'blog three')
+        })
+
+        cy.get('.like-button').then($btn => {
+          cy.wrap($btn[2]).click()
+          cy.wrap($btn[1]).click()
+          cy.wrap($btn[1]).click()
+          cy.wrap($btn[2]).click()
+          cy.wrap($btn[1]).click()
+          cy.wrap($btn[0]).click()
+        })
+
+        cy.get('.blogTitle').then($div => {
+          cy.wrap($div[0]).should('contain', 'blog two')
+          cy.wrap($div[1]).should('contain', 'blog three')
+          cy.wrap($div[2]).should('contain', 'blog one')
+        })
+      })
     })
 
   })
