@@ -1,3 +1,5 @@
+import { findRenderedComponentWithType } from "react-dom/test-utils"
+
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -61,14 +63,9 @@ describe('Blog app', function() {
     })
   })
 
-  describe.only('When logged in', function() {
+  describe('When logged in', function() {
     beforeEach(function() {
-      cy.request('POST', 'http://localhost:3001/api/login', {
-        username: 'c_tester', password: 'secretPassword'
-      }).then(response => {
-        localStorage.setItem('loggedBlogAppUser', JSON.stringify(response.body))
-        cy.visit('http://localhost:3000')
-      })
+      cy.login({ username: 'c_tester', password: 'secretPassword' })
     })
 
     it('A blog can be created', function() {
@@ -83,10 +80,37 @@ describe('Blog app', function() {
         .parent()
         .should('contain', 'view')
 
+      cy.contains('https://www.urlbycypress.com')
+        .parent()
+        .should('not.be.visible')
+
       cy.get('#notification')
         .should('contain', 'a new blog cypress blog by cypress author added')
         .and('have.css', 'color', 'rgb(0, 128, 0)')
         .and('not.contain', 'blog creation failed')
     })
+
+    describe('and several blogs exists', function () {
+      beforeEach(function () {
+        cy.createBlog({ title: 'blog one', author: 'author one', url: 'url one' })
+        cy.createBlog({ title: 'blog two', author: 'author two', url: 'url two' })
+        cy.createBlog({ title: 'blog three', author: 'author three', url: 'url three' })
+      })
+
+      it.only('one of them can be liked', function () {
+        cy.contains('blog two')
+          .parent()
+          .contains('view').click()
+          .should('contain', 'hide')
+
+        cy.contains('url two')
+          .parent()
+          .should('be.visible')
+          .contains('like').click()
+          .parent()
+          .should('contain', '1')
+      })
+    })
+
   })
 })
