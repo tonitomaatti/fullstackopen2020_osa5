@@ -1,14 +1,7 @@
-import { findRenderedComponentWithType } from "react-dom/test-utils"
-
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
-    const user = {
-      name: 'Cypress Tester',
-      username: 'c_tester',
-      password: 'secretPassword'
-    }
-    cy.request('POST', 'http://localhost:3001/api/users/', user)
+    cy.createUser({ name: 'Cypress Tester', username: 'c_tester', password: 'secretPassword' })
     cy.visit('http://localhost:3000')
   })
 
@@ -97,7 +90,7 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'blog three', author: 'author three', url: 'url three' })
       })
 
-      it.only('one of them can be liked', function () {
+      it('one of them can be liked', function () {
         cy.contains('blog two')
           .parent()
           .contains('view').click()
@@ -109,6 +102,38 @@ describe('Blog app', function() {
           .contains('like').click()
           .parent()
           .should('contain', '1')
+      })
+
+      it('an owner can delete blog', function () {
+        cy.contains('blog one')
+          .parent()
+          .contains('view').click()
+
+        cy.contains('blog one')
+          .parent()
+          .contains('remove').click()
+
+        cy.get('html')
+          .should('not.contain', 'blog one')
+      })
+
+      it('cant delete other users blog', function () {
+        localStorage.removeItem('loggedBlogAppUser')
+        cy.reload()
+
+        cy.createUser({ name: 'user two', username: 'userTwo', password: 'passwordTwo' })
+        cy.login({ username: 'userTwo', password: 'passwordTwo' })
+
+        cy.contains('blog one')
+          .parent()
+          .contains('view').click()
+
+        cy.contains('url one')
+          .parent()
+          .should('be.visible')
+          .contains('remove')
+          .parent()
+          .should('not.be.visible')
       })
     })
 
